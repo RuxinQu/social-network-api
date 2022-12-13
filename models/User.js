@@ -14,7 +14,7 @@ const userSchema = new Schema(
             unique: true,
             validate: {
                 validator: function (email) {
-                    return /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/.test(email)
+                    return /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/.test(email);
                 },
                 message: props => `${props.value} is not a valid email!`
             }
@@ -33,7 +33,10 @@ const userSchema = new Schema(
         ]
     },
     {
-        virtuals: true
+        toJSON: {
+            virtuals: true,
+        },
+        id: false,
     }
 );
 
@@ -41,3 +44,6 @@ userSchema.virtual('friendCount').get(function () {
     return this.friends.length;
 });
 
+const User = model('User', userSchema)
+
+module.exports = User;
