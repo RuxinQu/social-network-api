@@ -35,7 +35,10 @@ const userController = {
     // update the user based on the id 
     async updateUser(req, res) {
         try {
-            const updatedUser = await User.findOneAndUpdate({ _id: req.params.id }, req.body);
+            const updatedUser = await User.findOneAndUpdate({ _id: req.params.id }, req.body)
+                .select('-__v')
+                .populate('thoughts')
+                .populate('friends');
             updatedUser
                 ? res.status(200).json(updatedUser)
                 : res.status(404).json({ message: 'Failed to find the user' })
@@ -51,6 +54,33 @@ const userController = {
             } else {
                 res.status(404).json({ message: 'Failed to find the user' })
             }
+        } catch (error) { res.status(500).json(error) }
+    },
+    async addFriend(req, res) {
+        try {
+            const userId = req.params.userId;
+            const friendId = req.params.friendId;
+            //check friend shouldn't be user themselves
+            if (userId === friendId) {
+                res.status(400).json({ message: 'Can\t add yourself as your friend' });
+                return;
+            }
+            //check if the friend already exists
+            const friend = await User.findOne({ _id: userId, friends: friendId });
+            if (friend) {
+                res.status(400).json({ message: 'Friend already exists' });
+                return;
+            }
+            const user = await User.findByIdAndUpdate(
+                { _id: userId },
+                { $push: { friends: friendId } },
+                { new: true })
+                .select('-__v')
+                .populate('thoughts')
+                .populate('friends');
+            user
+                ? res.status(200).json(user)
+                : res.status(404).json({ message: 'Failed to add friends' })
         } catch (error) { res.status(500).json(error) }
     }
 }
