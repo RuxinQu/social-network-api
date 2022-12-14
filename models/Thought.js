@@ -13,13 +13,22 @@ const thoughtSchema = new Schema(
         createAt: {
             type: Date,
             default: DateTime.now(),
-            get: (createAt) => { return createAt.setLocale('en-us').toLocaleString() }
+            get(createAt) {
+                return createAt.toLocaleString()
+            }
         },
         username: {
             type: String,
             required: true
         },
         reactions: [reactionSchema]
+    },
+    {
+        toJSON: {
+            virtuals: true,
+            getters: true
+        },
+        id: false,
     }
 );
 
