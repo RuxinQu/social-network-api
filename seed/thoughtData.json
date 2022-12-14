@@ -1,0 +1,18 @@
+[
+    {
+        "thoughtText": "helloworld",
+        "username": "ruxinqu",
+        "reaction": {
+            "reactionBody": "like it",
+            "username": "test"
+        }
+    },
+    {
+        "thoughtText": "I love JS",
+        "username": "ruxinqu",
+        "reaction": {
+            "reactionBody": "me too",
+            "username": "adam"
+        }
+    }
+]
