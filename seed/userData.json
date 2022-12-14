@@ -1,29 +1,14 @@
 [
     {
         "username": "ruxinqu",
-        "email": "ruxinqu@test.com",
-        "thoughts": [
-            1,
-            2
-        ],
-        "friends": [
-            2
-        ]
+        "email": "ruxinqu@test.com"
     },
     {
         "username": "adam",
-        "email": "adam@test.com",
-        "thoughts": [],
-        "friends": [
-            1
-        ]
+        "email": "adam@test.com"
     },
     {
         "username": "test",
-        "email": "test@test.com",
-        "thoughts": [],
-        "friends": [
-            1
-        ]
+        "email": "test@test.com"
     }
 ]
