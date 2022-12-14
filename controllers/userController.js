@@ -56,6 +56,7 @@ const userController = {
             }
         } catch (error) { res.status(500).json(error) }
     },
+    // find the user and add a friend based on id
     async addFriend(req, res) {
         try {
             const userId = req.params.userId;
@@ -64,23 +65,40 @@ const userController = {
             if (userId === friendId) {
                 res.status(400).json({ message: 'Can\t add yourself as your friend' });
                 return;
-            }
+            };
             //check if the friend already exists
             const friend = await User.findOne({ _id: userId, friends: friendId });
             if (friend) {
                 res.status(400).json({ message: 'Friend already exists' });
                 return;
-            }
-            const user = await User.findByIdAndUpdate(
+            };
+            const user = await User.findOneAndUpdate(
                 { _id: userId },
                 { $push: { friends: friendId } },
                 { new: true })
-                .select('-__v')
-                .populate('thoughts')
-                .populate('friends');
             user
                 ? res.status(200).json(user)
                 : res.status(404).json({ message: 'Failed to add friends' })
+        } catch (error) { res.status(500).json(error) }
+    },
+    // find the user and remove a friend based on id
+    async deleteFriend(req, res) {
+        try {
+            const userId = req.params.userId;
+            const friendId = req.params.friendId;
+            //check friend shouldn't be user themselves
+            if (userId === friendId) {
+                res.status(400).json({ message: 'Can\'t delete yourself as a friend' });
+                return;
+            }
+            const friend = await User.findByIdAndUpdate(
+                userId,
+                { $pull: { friends: friendId } },
+                { new: true }
+            );
+            friend
+                ? res.status(200).json(friend)
+                : res.status(404).json({ message: 'Failed to remove friends' })
         } catch (error) { res.status(500).json(error) }
     }
 }
