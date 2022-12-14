@@ -12,12 +12,9 @@ const userSchema = new Schema(
             type: String,
             required: true,
             unique: true,
-            validate: {
-                validator: function (email) {
-                    return /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/.test(email);
-                },
-                message: props => `${props.value} is not a valid email!`
-            }
+            match: [
+                /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,
+                'This is not a valid email!']
         },
         thoughts: [
             {
@@ -35,6 +32,7 @@ const userSchema = new Schema(
     {
         toJSON: {
             virtuals: true,
+            getters: true,
         },
         id: false,
     }
