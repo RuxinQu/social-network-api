@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, Thought } = require('../models');
 
 const userController = {
     async getAllUser(req, res) {
@@ -9,7 +9,48 @@ const userController = {
                 .populate('friends')
             users
                 ? res.status(200).json(users)
-                : res.status(404).send()
+                : res.status(404).json({ message: 'Failed to find the user' })
+        } catch (error) { res.status(500).json(error) }
+    },
+    //find one user and populate the thoughts and friends
+    async getOneUser(req, res) {
+        try {
+            const user = await User.findById(req.params.id)
+                .select('-__v')
+                .populate('thoughts')
+                .populate('friends')
+            user
+                ? res.status(200).json(user)
+                : res.status(404).json({ message: 'Failed to find the user' })
+        } catch (error) { res.status(500).json(error) }
+    },
+    async postUser(req, res) {
+        try {
+            const newUser = await User.create(req.body);
+            newUser
+                ? res.status(200).json(newUser)
+                : res.status(404).json({ message: 'Failed to find the user' })
+        } catch (error) { res.status(500).json(error) }
+    },
+    // update the user based on the id 
+    async updateUser(req, res) {
+        try {
+            const updatedUser = await User.findOneAndUpdate({ _id: req.params.id }, req.body);
+            updatedUser
+                ? res.status(200).json(updatedUser)
+                : res.status(404).json({ message: 'Failed to find the user' })
+        } catch (error) { res.status(500).json(error) }
+    },
+    //delete the user and the associated thoughts
+    async deleteUser(req, res) {
+        try {
+            const user = await User.findOneAndDelete({ _id: req.params.id });
+            if (user) {
+                await Thought.deleteMany({ _id: { $in: user.thoughts } });
+                res.status(200).json({ message: 'User and associated thoughts deleted' })
+            } else {
+                res.status(404).json({ message: 'Failed to find the user' })
+            }
         } catch (error) { res.status(500).json(error) }
     }
 }
