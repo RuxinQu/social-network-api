@@ -2,7 +2,7 @@
     {
         "thoughtText": "helloworld",
         "username": "ruxinqu",
-        "reaction": [
+        "reactions": [
             {
                 "reactionBody": "like it",
                 "username": "test"
@@ -12,7 +12,7 @@
     {
         "thoughtText": "I love JS",
         "username": "ruxinqu",
-        "reaction": [
+        "reactions": [
             {
                 "reactionBody": "me too",
                 "username": "adam"

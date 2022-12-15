@@ -4,26 +4,23 @@ const userController = {
     async getAllUser(req, res) {
         try {
             const users = await User.find()
-                .select('-__v')
-                .populate('thoughts')
-                .populate('friends')
-            users
-                ? res.status(200).json(users)
-                : res.status(404).json({ message: 'Failed to find the user' })
+            res.status(200).json(users)
         } catch (error) { res.status(500).json(error) }
     },
+
     //find one user and populate the thoughts and friends
     async getOneUser(req, res) {
         try {
             const user = await User.findById(req.params.id)
                 .select('-__v')
                 .populate('thoughts')
-                .populate('friends')
+                .populate('friends');
             user
                 ? res.status(200).json(user)
                 : res.status(404).json({ message: 'Failed to find the user' })
         } catch (error) { res.status(500).json(error) }
     },
+
     async postUser(req, res) {
         try {
             const newUser = await User.create(req.body);
@@ -32,6 +29,7 @@ const userController = {
                 : res.status(404).json({ message: 'Failed to find the user' })
         } catch (error) { res.status(500).json(error) }
     },
+
     // update the user based on the id 
     async updateUser(req, res) {
         try {
@@ -44,6 +42,7 @@ const userController = {
                 : res.status(404).json({ message: 'Failed to find the user' })
         } catch (error) { res.status(500).json(error) }
     },
+
     //delete the user and the associated thoughts
     async deleteUser(req, res) {
         try {
@@ -56,6 +55,7 @@ const userController = {
             }
         } catch (error) { res.status(500).json(error) }
     },
+
     // find the user and add a friend based on id
     async addFriend(req, res) {
         try {
@@ -81,6 +81,7 @@ const userController = {
                 : res.status(404).json({ message: 'Failed to add friends' })
         } catch (error) { res.status(500).json(error) }
     },
+
     // find the user and remove a friend based on id
     async deleteFriend(req, res) {
         try {
