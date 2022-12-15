@@ -14,7 +14,7 @@ const userController = {
             const user = await User.findById(req.params.id)
                 .select('-__v')
                 .populate('thoughts')
-                .populate('friends')
+                .populate('friends');
             user
                 ? res.status(200).json(user)
                 : res.status(404).json({ message: 'Failed to find the user' })
