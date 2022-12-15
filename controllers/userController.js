@@ -33,7 +33,10 @@ const userController = {
     // update the user based on the id 
     async updateUser(req, res) {
         try {
-            const updatedUser = await User.findOneAndUpdate({ _id: req.params.id }, req.body)
+            const updatedUser = await User.findOneAndUpdate(
+                { _id: req.params.id },
+                req.body,
+                { new: true })
                 .select('-__v')
                 .populate('thoughts')
                 .populate('friends');
