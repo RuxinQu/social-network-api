@@ -25,7 +25,7 @@ const reactionController = {
                 { new: true }
             );
             reaction
-                ? res.status(200).json({ message: ' Successfully deleted reaction' })
+                ? res.status(200).json(reaction)
                 : res.status(404).json({ message: 'Fail to delete reactions' })
         } catch (error) { res.status(500).json(error) }
     }
