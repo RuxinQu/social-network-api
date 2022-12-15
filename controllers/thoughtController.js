@@ -1,5 +1,4 @@
 const { User, Thought } = require('../models');
-const { exists } = require('../models/User');
 
 const thoughtController = {
     async getAllThought(req, res) {
@@ -11,7 +10,7 @@ const thoughtController = {
 
     async getOneThought(req, res) {
         try {
-            const thought = await Thought.findById(req.params.id)
+            const thought = await Thought.findById(req.params.id);
             thought
                 ? res.status(200).json(thought)
                 : res.status(404).json({ message: 'Failed to find the thought' })
@@ -27,14 +26,15 @@ const thoughtController = {
                 return;
             }
             const newThought = await Thought.create(req.body);
+            // update the thoughts field in user document
             const updateUser = await User.findOneAndUpdate(
                 { username: req.body.username },
                 { $push: { thoughts: newThought._id } },
                 { new: true })
                 .select('-__v')
                 .populate('thoughts');
-            updateUser
-                ? res.status(200).json(updateUser)
+            newThought
+                ? res.status(200).json(newThought)
                 : res.status(404).json({ message: 'Failed to add new thoughts' })
         } catch (error) { res.status(500).json(error) }
     },
@@ -52,10 +52,14 @@ const thoughtController = {
         } catch (error) { res.status(500).json(error) }
     },
 
-    // delete the thought based on the id
+    // delete the thought based on the id, also remove the thoughtId from the user document
     async deleteThought(req, res) {
         try {
             const thought = await Thought.findOneAndDelete({ _id: req.params.id })
+            //update the thoughts field in user document
+             await User.findOneAndUpdate(
+                { thoughts: thought._id },
+                { $pull: { thoughts: thought._id } });
             thought
                 ? res.status(200).json(thought)
                 : res.status(404).json({ message: 'Failed to delete the thought' })
