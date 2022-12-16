@@ -12,6 +12,7 @@ const userController = {
     async getOneUser(req, res) {
         try {
             const user = await User.findById(req.params.id)
+                //to exclude the __v property which stores version related data
                 .select('-__v')
                 .populate('thoughts')
                 .populate('friends');
@@ -35,7 +36,7 @@ const userController = {
         try {
             const updatedUser = await User.findOneAndUpdate(
                 { _id: req.params.id },
-                req.body,
+                { $set: req.body },
                 { new: true })
                 .select('-__v')
                 .populate('thoughts')
@@ -69,15 +70,10 @@ const userController = {
                 res.status(400).json({ message: 'Can\t add yourself as your friend' });
                 return;
             };
-            //check if the friend already exists
-            const friend = await User.findOne({ _id: userId, friends: friendId });
-            if (friend) {
-                res.status(400).json({ message: 'Friend already exists' });
-                return;
-            };
+            //$addToSet only push the data not already exists.
             const user = await User.findOneAndUpdate(
                 { _id: userId },
-                { $push: { friends: friendId } },
+                { $addToSet: { friends: friendId } },
                 { new: true })
             user
                 ? res.status(200).json(user)
