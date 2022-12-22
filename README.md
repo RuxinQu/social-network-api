@@ -53,6 +53,10 @@ View the demo video of this project [**HERE**](https://drive.google.com/file/d/1
 - DELETE to pull and remove a reaction by the reaction's reactionId value
 
 
+Here is a screenshot: 
+
+![Screenshot 2022-12-21 at 6 42 40 PM](https://user-images.githubusercontent.com/73778127/209044202-008e021a-1430-4ded-968c-aacee5ce1de8.png)
+
 ## License
 
 This project is under MIT license
